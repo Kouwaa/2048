@@ -1,17 +1,32 @@
+
 package com.game2048.gui;
+
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 import com.game2048.core.Grid;
 import com.game2048.core.Tile;
+import com.game2048.gui.GamePanel;
 
-import javax.swing.*;
-import java.awt.*;
+
+
 
 public class GamePanel extends JPanel {
-    private final Grid grid;
+    private Grid grid;
 
     public GamePanel(Grid grid) {
         this.grid = grid;
-        setPreferredSize(new Dimension(400, 400)); // Adjust as necessary
+        setPreferredSize(new Dimension(400, 400)); // Adjust size as needed
+    }
+
+    public void setGrid(Grid newGrid) {
+        this.grid = newGrid; // Update the grid
     }
 
     @Override

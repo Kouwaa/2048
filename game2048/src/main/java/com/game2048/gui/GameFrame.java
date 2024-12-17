@@ -22,6 +22,12 @@ public class GameFrame extends JFrame {
         this.score = 0; // Initial score
         this.gamePanel = new GamePanel(grid);
 
+        // Calculate dynamic window size
+        int tileSize = 200; // Size of each tile
+        int margin = 50;    // Space for padding and UI elements
+        int windowWidth = grid.getSize() * tileSize + margin;
+        int windowHeight = grid.getSize() * tileSize + margin + 100; // Add space for headers
+
         // Create a panel for the header (score and restart button)
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
@@ -46,7 +52,7 @@ public class GameFrame extends JFrame {
         // Set up the main frame
         setTitle("2048 Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 800);
+        setSize(windowWidth, windowHeight); // Use dynamic size
         setResizable(false);
         setLayout(new BorderLayout());
         add(headerPanel, BorderLayout.NORTH);
@@ -80,7 +86,6 @@ public class GameFrame extends JFrame {
         repaint(); // Repaint the UI to reflect changes
     }
 
-
     public void repaint() {
         gamePanel.repaint();
     }
@@ -93,12 +98,4 @@ public class GameFrame extends JFrame {
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
-
-
 }
-
-
-
-
-
-

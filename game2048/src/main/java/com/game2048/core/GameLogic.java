@@ -43,6 +43,9 @@ public class GameLogic {
 
         // Ensure UI is refreshed
         gameFrame.repaint();
+
+        // Refocus the frame for key events
+        gameFrame.requestFocusInWindow();
     }
 
 

@@ -22,7 +22,7 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Grid grid) {
         this.grid = grid;
-        setPreferredSize(new Dimension(400, 400)); // Adjust size as needed
+        setPreferredSize(new Dimension(400, 400)); // Grid size
     }
 
     public void setGrid(Grid newGrid) {
@@ -42,8 +42,8 @@ public class GamePanel extends JPanel {
         for (int row = 0; row < grid.getSize(); row++) {
             for (int col = 0; col < grid.getSize(); col++) {
                 Tile tile = grid.getGrid()[row][col];
-                int x = col * tileSize + tileGap;
-                int y = row * tileSize + tileGap;
+                int x = col * tileSize + tileGap ;
+                int y = row * tileSize + tileGap ;
 
                 // Draw tile background
                 g2d.setColor(tile.isEmpty() ? Color.LIGHT_GRAY : getTileColor(tile.getValue()));

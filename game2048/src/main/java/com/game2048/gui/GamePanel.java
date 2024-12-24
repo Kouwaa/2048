@@ -12,10 +12,7 @@ import java.awt.RenderingHints;
 
 import com.game2048.core.Grid;
 import com.game2048.core.Tile;
-import com.game2048.gui.GamePanel;
-
-
-
+import com.game2048.util.Colors;
 
 public class GamePanel extends JPanel {
     private Grid grid;
@@ -23,6 +20,7 @@ public class GamePanel extends JPanel {
     public GamePanel(Grid grid) {
         this.grid = grid;
         setPreferredSize(new Dimension(400, 400)); // Grid size
+        setBackground(Colors.BACKGROUND);
     }
 
     public void setGrid(Grid newGrid) {
@@ -42,16 +40,16 @@ public class GamePanel extends JPanel {
         for (int row = 0; row < grid.getSize(); row++) {
             for (int col = 0; col < grid.getSize(); col++) {
                 Tile tile = grid.getGrid()[row][col];
-                int x = col * tileSize + tileGap ;
-                int y = row * tileSize + tileGap ;
+                int x = col * tileSize + tileGap;
+                int y = row * tileSize + tileGap;
 
                 // Draw tile background
-                g2d.setColor(tile.isEmpty() ? Color.LIGHT_GRAY : getTileColor(tile.getValue()));
+                g2d.setColor(tile.isEmpty() ? Colors.VOID : getTileColor(tile.getValue()));
                 g2d.fillRoundRect(x, y, tileSize - tileGap, tileSize - tileGap, 15, 15);
 
                 // Draw tile value
                 if (!tile.isEmpty()) {
-                    g2d.setColor(Color.BLACK);
+                    g2d.setColor(tile.getValue() == 2 || tile.getValue() == 4 ? Colors.DARK : Colors.LIGHT);
                     g2d.setFont(new Font("Arial", Font.BOLD, tileSize / 3));
                     String value = String.valueOf(tile.getValue());
                     FontMetrics fm = g2d.getFontMetrics();
@@ -65,18 +63,18 @@ public class GamePanel extends JPanel {
 
     private Color getTileColor(int value) {
         return switch (value) {
-            case 2 -> Color.WHITE;
-            case 4 -> Color.LIGHT_GRAY;
-            case 8 -> Color.ORANGE;
-            case 16 -> Color.PINK;
-            case 32 -> Color.RED;
-            case 64 -> Color.MAGENTA;
-            case 128 -> Color.CYAN;
-            case 256 -> Color.BLUE;
-            case 512 -> Color.GREEN;
-            case 1024 -> Color.YELLOW;
-            case 2048 -> Color.BLACK;
-            default -> Color.DARK_GRAY;
+            case 2 -> Colors.GREY2;
+            case 4 -> Colors.GREY4;
+            case 8 -> Colors.ORANGE8;
+            case 16 -> Colors.ORANGE16;
+            case 32 -> Colors.RED32;
+            case 64 -> Colors.RED64;
+            case 128 -> Colors.YELLOW128;
+            case 256 -> Colors.YELLOW256;
+            case 512 -> Colors.YELLOW512;
+            case 1024 -> Colors.YELLOW1024;
+            case 2048 -> Colors.YELLOW2048;
+            default -> Colors.VOID;
         };
     }
 }

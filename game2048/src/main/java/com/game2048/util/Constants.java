@@ -6,5 +6,5 @@ public class Constants {
     public static final int TILE_GAP = 10;
     public static final int WIN_TILE = 2048;
     
-    // Colors and font settings
+       
 }

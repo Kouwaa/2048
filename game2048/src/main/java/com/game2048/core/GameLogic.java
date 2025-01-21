@@ -1,7 +1,7 @@
 package com.game2048.core;
 
 import com.game2048.gui.GameFrame;
-import com.game2048.gui.GamePanel;
+
 
 public class GameLogic {
     private Grid grid;
@@ -9,7 +9,7 @@ public class GameLogic {
 
     public GameLogic(int size) {
         this.grid = new Grid(size);
-        this.gameFrame = new GameFrame(grid, this::handleKeyPress, this::restartGame);
+        this.gameFrame = new GameFrame(grid, this::handleKeyPress, this::restartGame, this::changeGridSize);
     }
 
     public void handleKeyPress(Direction direction) {
@@ -48,5 +48,11 @@ public class GameLogic {
         gameFrame.requestFocusInWindow();
     }
 
-
+    public void changeGridSize(int size) {
+        // Change the grid size and reset the game
+        this.grid = new Grid(size);
+        gameFrame.resetScore();
+        gameFrame.updateGrid(this.grid);
+        gameFrame.requestFocusInWindow();
+    }
 }

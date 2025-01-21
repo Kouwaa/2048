@@ -1,4 +1,3 @@
-
 package com.game2048.gui;
 
 import javax.swing.JPanel;
@@ -12,6 +11,7 @@ import java.awt.RenderingHints;
 
 import com.game2048.core.Grid;
 import com.game2048.core.Tile;
+import com.game2048.util.Constants;
 import com.game2048.util.Colors;
 
 public class GamePanel extends JPanel {
@@ -19,12 +19,16 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Grid grid) {
         this.grid = grid;
-        setPreferredSize(new Dimension(400, 400)); // Grid size
+        setPreferredSize(new Dimension(
+            grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP,
+            grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP
+        ));
         setBackground(Colors.BACKGROUND);
     }
 
     public void setGrid(Grid newGrid) {
-        this.grid = newGrid; // Update the grid
+        this.grid = newGrid;
+        repaint();
     }
 
     @Override
@@ -34,18 +38,23 @@ public class GamePanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int tileSize = getWidth() / grid.getSize();
-        int tileGap = 5;
+        int tileSize = Constants.TILE_SIZE;
+        int tileGap = Constants.TILE_GAP;
 
+        // Clear the background
+        g2d.setColor(Colors.BACKGROUND);
+        g2d.fillRect(0, 0, getWidth(), getHeight());
+
+        // Draw tiles
         for (int row = 0; row < grid.getSize(); row++) {
             for (int col = 0; col < grid.getSize(); col++) {
                 Tile tile = grid.getGrid()[row][col];
-                int x = col * tileSize + tileGap;
-                int y = row * tileSize + tileGap;
+                int x = col * (tileSize + tileGap);
+                int y = row * (tileSize + tileGap);
 
                 // Draw tile background
                 g2d.setColor(tile.isEmpty() ? Colors.VOID : getTileColor(tile.getValue()));
-                g2d.fillRoundRect(x, y, tileSize - tileGap, tileSize - tileGap, 15, 15);
+                g2d.fillRoundRect(x, y, tileSize, tileSize, 15, 15);
 
                 // Draw tile value
                 if (!tile.isEmpty()) {
@@ -55,7 +64,7 @@ public class GamePanel extends JPanel {
                     FontMetrics fm = g2d.getFontMetrics();
                     int textWidth = fm.stringWidth(value);
                     int textHeight = fm.getAscent();
-                    g2d.drawString(value, x + (tileSize - tileGap - textWidth) / 2, y + (tileSize - tileGap + textHeight) / 2);
+                    g2d.drawString(value, x + (tileSize - textWidth) / 2, y + (tileSize + textHeight) / 2 - 5);
                 }
             }
         }

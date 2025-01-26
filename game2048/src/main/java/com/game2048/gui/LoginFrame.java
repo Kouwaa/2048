@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+
 import com.game2048.core.GameLogic;
 
 public class LoginFrame extends JFrame {
@@ -19,11 +21,16 @@ public class LoginFrame extends JFrame {
         // Couleur principale
         Color primaryColor = new Color(255, 200, 140); // Orange clair
 
-        // Logo du jeu
-        ImageIcon logoIcon = new ImageIcon("/home/kawtar/Downloads/logo.png"); // Chemin du logo
+        // Charger l'image du logo
+        String imagePath = "images/2048_game_logo.png"; // Chemin relatif à la racine du projet
+        File imageFile = new File(imagePath);
+        if (!imageFile.exists()) {
+            System.err.println("Image introuvable : " + imagePath);
+        }
+        ImageIcon logoIcon = new ImageIcon(imageFile.getAbsolutePath());
         Image scaledLogo = logoIcon.getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH);
         JLabel logoLabel = new JLabel(new ImageIcon(scaledLogo));
-        logoLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Panel principal pour les composants
         JPanel mainPanel = new JPanel();
@@ -35,36 +42,30 @@ public class LoginFrame extends JFrame {
         titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setForeground(Color.DARK_GRAY);
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Espacement après le titre
-        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(Box.createVerticalStrut(20)); // Espacement au-dessus
         mainPanel.add(titleLabel);
+        mainPanel.add(Box.createVerticalStrut(20)); // Espacement après le titre
 
-        // Espacement après le logo
-        mainPanel.add(Box.createVerticalStrut(20));
+        // Ajouter le logo
+        mainPanel.add(logoLabel);
+        mainPanel.add(Box.createVerticalStrut(20)); // Espacement après le logo
 
         // Champs d'identifiant
         JLabel usernameLabel = new JLabel("Identifiant:");
         usernameLabel.setFont(new Font("Arial", Font.BOLD, 16));
         usernameLabel.setForeground(Color.DARK_GRAY);
         usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(usernameLabel);
 
         JTextField usernameField = new JTextField();
         usernameField.setMaximumSize(new Dimension(300, 30));
         usernameField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(usernameField);
 
-        // Champ de mot de passe
-        JLabel passwordLabel = new JLabel("Mot de passe:");
-        passwordLabel.setFont(new Font("Arial", Font.BOLD, 16));
-        passwordLabel.setForeground(Color.DARK_GRAY);
-        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setMaximumSize(new Dimension(300, 30));
-        passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+        mainPanel.add(Box.createVerticalStrut(20)); // Espacement après le champ texte
 
         // Bouton de connexion
-        JButton loginButton = new JButton("Se connecter");
+        JButton loginButton = new JButton("Jouer");
         loginButton.setFont(new Font("Arial", Font.BOLD, 16));
         loginButton.setBackground(new Color(230, 150, 100));
         loginButton.setForeground(Color.WHITE);
@@ -80,17 +81,28 @@ public class LoginFrame extends JFrame {
                 dispose(); // Fermer la fenêtre de login
             }
         });
-
-        // Ajout des composants au panneau principal
-        mainPanel.add(logoLabel);
-        mainPanel.add(Box.createVerticalStrut(20));
-        mainPanel.add(usernameLabel);
-        mainPanel.add(usernameField);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(passwordLabel);
-        mainPanel.add(passwordField);
-        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(loginButton);
+
+        mainPanel.add(Box.createVerticalStrut(10)); // Espacement entre les boutons
+
+        // Bouton pour afficher les meilleurs scores
+        JButton bestScoresButton = new JButton("Afficher les meilleurs scores");
+        bestScoresButton.setFont(new Font("Arial", Font.BOLD, 16));
+        bestScoresButton.setBackground(new Color(230, 150, 100));
+        bestScoresButton.setForeground(Color.WHITE);
+        bestScoresButton.setFocusPainted(false);
+        bestScoresButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bestScoresButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Action pour afficher les meilleurs scores (à implémenter plus tard)
+                JOptionPane.showMessageDialog(LoginFrame.this, 
+                        "Cette fonctionnalité sera implémentée.", 
+                        "Meilleurs Scores", 
+                        JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        mainPanel.add(bestScoresButton);
 
         // Ajouter le panneau principal à la fenêtre
         add(mainPanel, BorderLayout.CENTER);

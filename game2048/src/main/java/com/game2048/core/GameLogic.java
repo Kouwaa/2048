@@ -1,27 +1,35 @@
 package com.game2048.core;
 
 import com.game2048.gui.GameFrame;
-
+import com.game2048.util.DatabaseManager;
 
 public class GameLogic {
     private Grid grid;
     private final GameFrame gameFrame;
+    private final DatabaseManager dbManager;
+    private final String username;
 
-    public GameLogic(int size) {
+    public GameLogic(int size, String username) {
         this.grid = new Grid(size);
         this.gameFrame = new GameFrame(grid, this::handleKeyPress, this::restartGame, this::changeGridSize);
+        this.dbManager = new DatabaseManager();
+        this.username = username;
     }
 
     public void handleKeyPress(Direction direction) {
-        int points = grid.move(direction); // Assume move() now returns points earned
+        int points = grid.move(direction);
         if (points > 0) {
             gameFrame.updateScore(points);
         }
 
         // Check game status
         if (grid.hasWon()) {
+            // Enregistrer le score en cas de victoire
+            saveScore();
             gameFrame.showMessage("Congratulations! You've won!");
         } else if (!grid.canMove()) {
+            // Enregistrer le score en cas de défaite
+            saveScore();
             gameFrame.showMessage("Game Over! No more moves available.");
         }
 
@@ -29,27 +37,20 @@ public class GameLogic {
         gameFrame.repaint();
     }
 
-
+    private void saveScore() {
+        int score = gameFrame.getScore();
+        dbManager.insertScore(username, score);
+    }
 
     public void restartGame() {
-        // Reset the grid
         this.grid = new Grid(grid.getSize());
-
-        // Reset the score
         gameFrame.resetScore();
-
-        // Update the grid in the game frame
         gameFrame.updateGrid(this.grid);
-
-        // Ensure UI is refreshed
         gameFrame.repaint();
-
-        // Refocus the frame for key events
         gameFrame.requestFocusInWindow();
     }
 
     public void changeGridSize(int size) {
-        // Change the grid size and reset the game
         this.grid = new Grid(size);
         gameFrame.resetScore();
         gameFrame.updateGrid(this.grid);

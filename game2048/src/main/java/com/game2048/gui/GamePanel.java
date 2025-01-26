@@ -21,7 +21,7 @@ public class GamePanel extends JPanel {
         this.grid = grid;
         setPreferredSize(new Dimension(
             grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP,
-            grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP
+            grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP 
         ));
         setBackground(Colors.BACKGROUND);
     }

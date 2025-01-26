@@ -2,114 +2,86 @@ package com.game2048.gui;
 
 import com.game2048.core.Direction;
 import com.game2048.core.Grid;
-
+import com.game2048.util.DatabaseManager;
 
 import javax.swing.*;
 import java.awt.*;
-import javax.swing.ImageIcon;
-
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class GameFrame extends JFrame {
     private Grid grid;
     private final JPanel gamePanel;
     private final JLabel scoreLabel;
-    private final JLabel bestScoreLabel; 
+    private final JLabel bestScoreLabel;
     private int score;
     private int bestScore;
-
+    private final DatabaseManager dbManager;
 
     public GameFrame(Grid grid, Consumer<Direction> onKeyPress, Runnable onRestart, Consumer<Integer> onGridSizeChange) {
         this.grid = grid;
-        this.score = 0; // Initial score
-        this.bestScore = 0; // Initial best score
+        this.score = 0;
+        this.bestScore = 0;
         this.gamePanel = new GamePanel(grid);
+        this.dbManager = new DatabaseManager();
 
-        // Set up the main frame
+        // Configuration de la fenêtre principale
         setTitle("2048 Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        setResizable(false); // Disable manual resizing
+        setResizable(false);
         setFocusable(true);
 
-        // Create a panel for the header (score and restart button)
+        // Panneau supérieur (header) : Score, Meilleur score et bouton Restart
         JPanel headerPanel = new JPanel();
         headerPanel.setLayout(new BorderLayout());
 
-        // Create a label for the score
+        // Label du score
         scoreLabel = new JLabel("Score: " + score);
         scoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
         scoreLabel.setHorizontalAlignment(SwingConstants.LEFT);
         headerPanel.add(scoreLabel, BorderLayout.WEST);
 
-        // Create a label for the best score
+        // Label du meilleur score
         bestScoreLabel = new JLabel("Meilleur score: " + bestScore);
         bestScoreLabel.setFont(new Font("Arial", Font.BOLD, 18));
         bestScoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        headerPanel.add(bestScoreLabel, BorderLayout.CENTER);
 
-        // Create a restart button
-        ImageIcon resetIcon = new ImageIcon("/home/kawtar/Downloads/reset.png"); // Chemin vers l'image d'origine
-        Image scaledImage = resetIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH); // Redimensionner l'image
-        ImageIcon scaledResetIcon = new ImageIcon(scaledImage); // Créer une nouvelle icône avec l'image redimensionnée
-
-        // Créer le bouton reset avec l'icône redimensionnée
+        // Bouton Restart
+        ImageIcon resetIcon = new ImageIcon("images/reset.png");
+        Image scaledImage = resetIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+        ImageIcon scaledResetIcon = new ImageIcon(scaledImage);
         JButton restartButton = new JButton(scaledResetIcon);
-        restartButton.setPreferredSize(new Dimension(50, 50)); // Ajuster la taille du bouton
-        restartButton.setFocusPainted(false); // Supprimer l'indicateur de focus
-        restartButton.setBorder(BorderFactory.createEmptyBorder()); // Supprimer la bordure
-        restartButton.setContentAreaFilled(false); // Supprimer le remplissage
-        restartButton.addActionListener(e -> onRestart.run()); // Action de réinitialisation
-
-
-        // Create a panel to arrange the header items
-        JPanel scorePanel = new JPanel();
-        scorePanel.setLayout(new BorderLayout());
-        scorePanel.add(scoreLabel, BorderLayout.WEST);
-        scorePanel.add(bestScoreLabel, BorderLayout.CENTER);
-
-        // Add the score panel and reset button to the header
-        headerPanel.add(scorePanel, BorderLayout.CENTER);
-
-
-        // Ajouter le bouton au panneau d'en-tête
+        restartButton.setPreferredSize(new Dimension(50, 50));
+        restartButton.setFocusPainted(false);
+        restartButton.setBorder(BorderFactory.createEmptyBorder());
+        restartButton.setContentAreaFilled(false);
+        restartButton.addActionListener(e -> onRestart.run());
         headerPanel.add(restartButton, BorderLayout.EAST);
 
+        // Ajouter le header en haut
+        add(headerPanel, BorderLayout.NORTH);
 
-        // Ajouter un espace autour du bouton
-        JPanel buttonWrapper = new JPanel();
-        buttonWrapper.setLayout(new BorderLayout());
-        buttonWrapper.setBackground(headerPanel.getBackground());
-        buttonWrapper.add(restartButton, BorderLayout.CENTER);
-
-        // Ajouter le bouton de redémarrage à l'en-tête
-        headerPanel.add(buttonWrapper, BorderLayout.EAST);
-
-
-
-        // Create buttons for grid size
+        // Panneau des niveaux (côté droit)
         JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(5, 1, 10, 10)); // 5 rows, 1 column, 10px gap
-        buttonPanel.setBackground(new Color(240, 240, 240)); // Background color for the panel
+        buttonPanel.setLayout(new GridLayout(5, 1, 10, 10));
+        buttonPanel.setBackground(new Color(240, 240, 240));
 
-
-        // Loop to create level buttons
+        // Création des boutons pour les niveaux
         for (int size = 4; size <= 8; size++) {
-            final int gridSize = size; // Taille de la grille
+            final int gridSize = size;
             JButton button = new JButton(size + " x " + size);
-
-            // Appliquer un style moderne
             button.setFont(new Font("Arial", Font.BOLD, 16));
-            button.setBackground(new Color(255, 230, 180)); // Bleu clair
+            button.setBackground(new Color(255, 230, 180));
             button.setForeground(Color.DARK_GRAY);
-            button.setFocusPainted(false); // Supprimer l'indicateur de focus
+            button.setFocusPainted(false);
             button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(230, 150, 100), 2), // Bordure externe
-                BorderFactory.createEmptyBorder(5, 15, 5, 15))); // Marges internes
-
-            // Action sur clic
+                    BorderFactory.createLineBorder(new Color(230, 150, 100), 2),
+                    BorderFactory.createEmptyBorder(5, 15, 5, 15)
+            ));
             button.addActionListener(e -> {
                 onGridSizeChange.accept(gridSize);
                 resizeWindow(gridSize);
@@ -117,20 +89,31 @@ public class GameFrame extends JFrame {
             buttonPanel.add(button);
         }
 
+        // Ajouter les panneaux de jeu et des niveaux
+        add(gamePanel, BorderLayout.CENTER);
 
-        // Add the button panel to the far right with extra space
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BorderLayout());
-        rightPanel.setBackground(new Color(240, 240, 240)); // Match the button panel background
-        rightPanel.add(Box.createHorizontalStrut(20), BorderLayout.WEST); // Add extra space to the left of buttons
+        rightPanel.setBackground(new Color(240, 240, 240));
+        rightPanel.add(Box.createHorizontalStrut(20), BorderLayout.WEST);
         rightPanel.add(buttonPanel, BorderLayout.EAST);
-
-        // Add the header and panels to the frame
-        add(headerPanel, BorderLayout.NORTH);   
-        add(gamePanel, BorderLayout.CENTER);
         add(rightPanel, BorderLayout.EAST);
 
-        // Add KeyListener for arrow keys
+        // Bouton "Meilleurs Scores" en bas
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        JButton showScoresButton = new JButton("Meilleurs Scores");
+        showScoresButton.setFont(new Font("Arial", Font.BOLD, 14));
+        showScoresButton.setBackground(new Color(230, 150, 100));
+        showScoresButton.setForeground(Color.WHITE);
+        showScoresButton.setFocusPainted(false);
+        showScoresButton.addActionListener(e -> showTopScores());
+        bottomPanel.add(showScoresButton);
+
+        // Ajouter le panneau inférieur
+        add(bottomPanel, BorderLayout.SOUTH);
+
+        // Gestion des touches fléchées pour les mouvements
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -143,49 +126,67 @@ public class GameFrame extends JFrame {
             }
         });
 
-        resizeWindow(grid.getSize()); // Initial resizing
+        resizeWindow(grid.getSize());
         setVisible(true);
     }
 
-    /**
-     * Dynamically resizes the window based on the grid size.
-     * @param gridSize The size of the grid (e.g., 4, 5, 6, etc.).
-     */
-    private void resizeWindow(int gridSize) {
-        int tileSize = 100; // Example tile size
-        int gap = 10;       // Gap between tiles
-        int margin = 50;    // Space for borders and padding
-
-        int windowWidth = gridSize * (tileSize + gap) + margin + 35; // Add extra space for buttons
-        int windowHeight = gridSize * (tileSize + gap) + margin - 7 ; // Add space for headers
-
-        setSize(windowWidth, windowHeight); // Resize the window
-        setLocationRelativeTo(null); // Center the window on the screen
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
     }
 
-
     /**
-     * Updates the current score and checks if it's a new best score.
-     **/
+     * Affiche les meilleurs scores dans une liste stylisée.
+     */
+    private void showTopScores() {
+        List<String> topScores = dbManager.getTopScores();
+        if (topScores.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Aucun score disponible.", "Meilleurs Scores", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JFrame scoresFrame = new JFrame("Top 10 Meilleurs Scores");
+        scoresFrame.setSize(300, 400);
+        scoresFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        scoresFrame.setLayout(new BorderLayout());
+        scoresFrame.setLocationRelativeTo(null);
+
+        JLabel titleLabel = new JLabel("Top 10 Meilleurs Scores", JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JList<String> scoresList = new JList<>(topScores.toArray(new String[0]));
+        scoresList.setFont(new Font("Arial", Font.PLAIN, 16));
+        scoresList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        scoresList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JScrollPane scrollPane = new JScrollPane(scoresList);
+
+        JButton closeButton = new JButton("Fermer");
+        closeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        closeButton.addActionListener(e -> scoresFrame.dispose());
+        closeButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
+        JPanel buttonPanel = new JPanel();
+        buttonPanel.add(closeButton);
+
+        scoresFrame.add(titleLabel, BorderLayout.NORTH);
+        scoresFrame.add(scrollPane, BorderLayout.CENTER);
+        scoresFrame.add(buttonPanel, BorderLayout.SOUTH);
+
+        scoresFrame.setVisible(true);
+    }
+
     public void updateScore(int points) {
         score += points;
         scoreLabel.setText("Score: " + score);
-
-        // Check if we have a new best score
         if (score > bestScore) {
             bestScore = score;
-            bestScoreLabel.setText("Best: " + bestScore);
+            bestScoreLabel.setText("Meilleur score: " + bestScore);
         }
     }
 
-    public void updateGrid(Grid newGrid) {
-        this.grid = newGrid; // Update the grid reference
-        ((GamePanel) gamePanel).setGrid(newGrid); // Update the grid in the panel
-        repaint(); // Repaint the UI to reflect changes
-    }
-
-    public void repaint() {
-        gamePanel.repaint();
+    public int getScore() {
+        return score;
     }
 
     public void resetScore() {
@@ -193,7 +194,21 @@ public class GameFrame extends JFrame {
         scoreLabel.setText("Score: " + score);
     }
 
-    public void showMessage(String message) {
-        JOptionPane.showMessageDialog(this, message);
+    public void updateGrid(Grid newGrid) {
+        this.grid = newGrid;
+        ((GamePanel) gamePanel).setGrid(newGrid);
+        repaint();
+    }
+
+    private void resizeWindow(int gridSize) {
+        int tileSize = 100;
+        int gap = 10;
+        int margin = 50;
+
+        int windowWidth = gridSize * (tileSize + gap) + margin + 35;
+        int windowHeight = gridSize * (tileSize + gap) + margin + 35;
+
+        setSize(windowWidth, windowHeight);
+        setLocationRelativeTo(null);
     }
 }

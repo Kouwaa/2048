@@ -99,16 +99,30 @@ public class GameFrame extends JFrame {
         rightPanel.add(buttonPanel, BorderLayout.EAST);
         add(rightPanel, BorderLayout.EAST);
 
-        // Bouton "Meilleurs Scores" en bas
+        // Boutons en bas : Meilleurs Scores et Retour au Login
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        JButton showScoresButton = new JButton("Meilleurs Scores");
+
+        // Bouton "Meilleurs Scores"
+        JButton showScoresButton = new JButton("Afficher les Meilleurs Scores");
         showScoresButton.setFont(new Font("Arial", Font.BOLD, 14));
         showScoresButton.setBackground(new Color(230, 150, 100));
         showScoresButton.setForeground(Color.WHITE);
         showScoresButton.setFocusPainted(false);
         showScoresButton.addActionListener(e -> showTopScores());
         bottomPanel.add(showScoresButton);
+
+        // Bouton "Retour au Login"
+        JButton backToLoginButton = new JButton("Retour au Login");
+        backToLoginButton.setFont(new Font("Arial", Font.BOLD, 14));
+        backToLoginButton.setBackground(new Color(230, 150, 100));
+        backToLoginButton.setForeground(Color.WHITE);
+        backToLoginButton.setFocusPainted(false);
+        backToLoginButton.addActionListener(e -> {
+            SwingUtilities.invokeLater(LoginFrame::new); // Ouvre la fenêtre de login
+            dispose(); // Ferme la fenêtre actuelle
+        });
+        bottomPanel.add(backToLoginButton);
 
         // Ajouter le panneau inférieur
         add(bottomPanel, BorderLayout.SOUTH);
@@ -163,7 +177,10 @@ public class GameFrame extends JFrame {
 
         JButton closeButton = new JButton("Fermer");
         closeButton.setFont(new Font("Arial", Font.BOLD, 14));
-        closeButton.addActionListener(e -> scoresFrame.dispose());
+        closeButton.addActionListener(e -> {
+            scoresFrame.dispose(); // Fermer la fenêtre des scores
+            requestFocusInWindow(); // Redonner le focus à la fenêtre principale
+        });
         closeButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel buttonPanel = new JPanel();
@@ -175,6 +192,7 @@ public class GameFrame extends JFrame {
 
         scoresFrame.setVisible(true);
     }
+
 
     public void updateScore(int points) {
         score += points;

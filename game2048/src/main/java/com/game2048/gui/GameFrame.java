@@ -159,24 +159,37 @@ public class GameFrame extends JFrame {
         }
 
         JFrame scoresFrame = new JFrame("Top 10 Meilleurs Scores");
-        scoresFrame.setSize(400, 500); // Dimensions augmentées
-        scoresFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        scoresFrame.setSize(400, 500);
+        scoresFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // Permet de fermer uniquement cette fenêtre
         scoresFrame.setLayout(new BorderLayout());
         scoresFrame.setLocationRelativeTo(null);
 
+        // Ajouter un écouteur pour redonner le focus à la fenêtre principale lors de la fermeture
+        scoresFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                requestFocusInWindow(); // Redonne le focus à la fenêtre principale
+            }
+
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                requestFocusInWindow(); // Redonne le focus à la fenêtre principale
+            }
+        });
+
         JLabel titleLabel = new JLabel("Top 10 Meilleurs Scores", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Police plus grande
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
         titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JList<String> scoresList = new JList<>(topScores.toArray(new String[0]));
-        scoresList.setFont(new Font("Arial", Font.PLAIN, 18)); // Police plus grande
+        scoresList.setFont(new Font("Arial", Font.PLAIN, 18));
         scoresList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scoresList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JScrollPane scrollPane = new JScrollPane(scoresList);
 
         JButton closeButton = new JButton("Fermer");
-        closeButton.setFont(new Font("Arial", Font.BOLD, 16)); // Police plus grande
+        closeButton.setFont(new Font("Arial", Font.BOLD, 16));
         closeButton.addActionListener(e -> {
             scoresFrame.dispose(); // Fermer la fenêtre des scores
             requestFocusInWindow(); // Redonner le focus à la fenêtre principale
@@ -192,6 +205,7 @@ public class GameFrame extends JFrame {
 
         scoresFrame.setVisible(true);
     }
+
 
     public void updateScore(int points) {
         score += points;

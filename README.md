@@ -15,66 +15,10 @@
 ## Diagrammes
 
 ### Diagramme de séquence
-
-```plantuml
-@startuml
-actor Joueur
-
-Joueur -> Jeu2048 : Lance le jeu
-Joueur -> Jeu2048 : Choisit une direction (haut, bas, gauche, droite)
-
-activate Jeu2048
-Jeu2048 -> Grille : Déplacement des cases
-Grille -> Grille : Fusion des cases similaires
-Jeu2048 -> Jeu2048 : Génère un nouveau nombre (2 ou 4) après un déplacement valide
-
-alt Victoire
-    Jeu2048 -> Joueur : Affiche "Gagné"
-else Fin de jeu
-    Jeu2048 -> Joueur : Affiche "Perdu"
-end
-
-Joueur -> Jeu2048 : Réessaie ou quitte
-
-deactivate Jeu2048
-@enduml
-```
+![Diagramme de séquance](./images/diagramme_sequence_kawtar_bennis.png)
 
 ### Diagramme de classes
+![Diagramme de classes](./images/diagramme_class.png)
 
-```plantuml
-@startuml
-class Jeu2048 {
-    - grille : int[][]
-    - score : int
-    + initialiserJeu() : void
-    + deplacer(String direction) : void
-    + genererNouvelleCase() : void
-    + estJeuTermine() : boolean
-    + estVictoire() : boolean
-}
-
-class Grille {
-    - taille : int
-    + deplacerCases(String direction) : boolean
-    + fusionnerCases() : boolean
-    + ajouterCase(int valeur, int x, int y) : void
-    + estPleine() : boolean
-    + peutFusionner() : boolean
-}
-
-class Case {
-    - valeur : int
-    + obtenirValeur() : int
-    + setValeur(int valeur) : void
-}
-
-Jeu2048 "1" *-- "1" Grille
-Grille "1" *-- "0:*" Case
-@enduml
-```
-
-
-
-
-
+### Diagramme de cas d'usage
+![Diagramme de cas d'usage](./images/uses_casse_diagram_kawtar_bennis.png)

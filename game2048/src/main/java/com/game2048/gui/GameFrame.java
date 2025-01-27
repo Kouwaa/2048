@@ -51,7 +51,7 @@ public class GameFrame extends JFrame {
         headerPanel.add(bestScoreLabel, BorderLayout.CENTER);
 
         // Bouton Restart
-        ImageIcon resetIcon = new ImageIcon("images/reset.png");
+        ImageIcon resetIcon = new ImageIcon("images/reset.png");//contenu dans le dossier images
         Image scaledImage = resetIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
         ImageIcon scaledResetIcon = new ImageIcon(scaledImage);
         JButton restartButton = new JButton(scaledResetIcon);

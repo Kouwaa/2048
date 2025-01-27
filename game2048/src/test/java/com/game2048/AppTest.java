@@ -35,9 +35,8 @@ public class AppTest {
         grid.getGrid()[3][2].setValue(0);
         grid.getGrid()[3][3].setValue(0);
 
-        printGrid(grid);
         int score = grid.move(Direction.LEFT);
-        printGrid(grid);
+
 
         assertEquals("Le score doit être 4 après une fusion de 2+2", 4, score);
     }
@@ -191,9 +190,7 @@ public class AppTest {
         grid.getGrid()[3][3].setValue(0);
 
         // Effectuer un mouvement vers la droite
-        printGrid(grid);
         int score = grid.move(Direction.RIGHT);
-        printGrid(grid);
 
         // La fusion doit produire [0, 0, 4, 8] et un score de 12
         assertEquals("Le score après un mouvement droite doit être 12", 12, score);
@@ -230,9 +227,7 @@ public class AppTest {
         grid.getGrid()[3][3].setValue(0);
 
         // Effectuer un mouvement vers le haut
-        printGrid(grid);
         int score = grid.move(Direction.UP);
-        printGrid(grid);
 
         // La fusion doit produire [4, 8, 0, 0] dans la première colonne et un score de 12
         assertEquals("Le score après un mouvement haut doit être 12", 12, score);
@@ -269,9 +264,7 @@ public class AppTest {
         grid.getGrid()[3][3].setValue(0);
 
         // Effectuer un mouvement vers le bas
-        printGrid(grid);
         int score = grid.move(Direction.DOWN);
-        printGrid(grid);
 
         // La fusion doit produire [0, 0, 4, 8] dans la première colonne et un score de 12
         assertEquals("Le score après un mouvement bas doit être 12", 12, score);
@@ -310,17 +303,11 @@ public class AppTest {
         grid.getGrid()[3][2].setValue(0);
         grid.getGrid()[3][3].setValue(0);
 
-        System.out.println("État initial de la grille :");
-        printGrid(grid);
-
         // Copier l'état initial de la grille
         Tile[][] initialState = deepCopyGrid(grid.getGrid());
 
         // Effectuer un mouvement invalide (vers le haut)
         grid.move(Direction.UP);
-
-        System.out.println("État final de la grille après mouvement UP :");
-        printGrid(grid);
 
         // Vérifier que la grille n'a pas changé
         assertTrue("La grille ne doit pas changer après un mouvement invalide",

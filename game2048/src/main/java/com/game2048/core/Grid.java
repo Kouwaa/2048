@@ -5,7 +5,7 @@ import com.game2048.util.Constants;
 
 public class Grid {
     private final Tile[][] grid;
-    private final int size; // Dynamic grid size
+    private final int size; // Taille dynamique de la grille
     private final Random random;
 
     public Grid(int size) {
@@ -13,14 +13,14 @@ public class Grid {
         this.grid = new Tile[size][size];
         this.random = new Random();
 
-        // Initialize grid with empty tiles
+        // Initialiser la grille avec des tuiles vides
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 grid[i][j] = new Tile();
             }
         }
 
-        // Add two random tiles at the start
+        // Ajouter deux tuiles aléatoires au début
         addRandomTile();
         addRandomTile();
     }
@@ -34,6 +34,9 @@ public class Grid {
         return size;
     }
 
+    /**
+     * Effectue une copie profonde de la grille actuelle.
+     */
     private Tile[][] copyGrid() {
         Tile[][] copy = new Tile[size][size];
         for (int row = 0; row < size; row++) {
@@ -44,26 +47,32 @@ public class Grid {
         return copy;
     }
 
+
+    /**
+     * Vérifie si deux grilles sont identiques.
+     */
     private boolean isGridEqual(Tile[][] otherGrid) {
         for (int row = 0; row < size; row++) {
             for (int col = 0; col < size; col++) {
                 if (grid[row][col].getValue() != otherGrid[row][col].getValue()) {
-                    return false; // The grid has changed
+                    return false; // La grille a changé
                 }
             }
         }
-        return true; // The grid has not changed
+        return true; // La grille n'a pas changé
     }
 
 
-
+    /**
+     * Effectue un mouvement dans une direction donnée et retourne le score obtenu.
+     */
     public int move(Direction direction) {
-        // Store the initial state of the grid before the move
+        // Sauvegarder l'état initial de la grille avant le mouvement
         Tile[][] initialGridState = copyGrid();
 
         int points = 0;
 
-        // Call the appropriate move method
+        // Appeler la méthode de mouvement appropriée
         switch (direction) {
             case UP -> points = moveUp();
             case DOWN -> points = moveDown();
@@ -71,31 +80,33 @@ public class Grid {
             case RIGHT -> points = moveRight();
         }
 
-        // Add a random tile only if the grid state has changed
+        // Ajouter une tuile aléatoire uniquement si l'état de la grille a changé
         if (!isGridEqual(initialGridState)) {
             addRandomTile();
         }
 
-        return points; // Return the points scored during this move
+        return points; // Retourner le score obtenu lors de ce mouvement
 }
 
-
+    /**
+     * Effectue un mouvement vers le haut.
+     */
     private int moveUp() {
-        int points = 0; // Accumulate points for this move
+        int points = 0; // Points accumulés pour ce mouvement
 
         for (int col = 0; col < size; col++) {
-            int[] mergedRow = new int[size]; // Track merged cells to avoid double merges
+            int[] mergedRow = new int[size]; // Suivre les cellules fusionnées pour éviter les doubles fusions
             for (int row = 1; row < size; row++) {
                 if (!grid[row][col].isEmpty()) {
                     int currentRow = row;
                     while (currentRow > 0 && grid[currentRow - 1][col].isEmpty()) {
-                        // Move tile upward
+                        // Déplacer la tuile vers le haut
                         grid[currentRow - 1][col].setValue(grid[currentRow][col].getValue());
                         grid[currentRow][col].setValue(0);
                         currentRow--;
                     }
 
-                    // Check if we can merge with the tile above
+                    // Vérifier si une fusion est possible avec la tuile au-dessus
                     if (currentRow > 0 && grid[currentRow - 1][col].getValue() == grid[currentRow][col].getValue()
                             && mergedRow[currentRow - 1] == 0) {
                         grid[currentRow - 1][col].setValue(grid[currentRow - 1][col].getValue() * 2);
@@ -212,7 +223,9 @@ public class Grid {
 
 
 
-
+    /**
+     * Ajoute une tuile aléatoire dans une position vide.
+     */
     private void addRandomTile() {
         int x, y;
         do {
@@ -220,52 +233,53 @@ public class Grid {
             y = random.nextInt(size);
         } while (!grid[x][y].isEmpty());
 
+        // 90% de chance d'ajouter une tuile de valeur 2, 10% une tuile de valeur 4
         grid[x][y].setValue(random.nextInt(10) < 9 ? 2 : 4);
     }
 
 
-
+    /**
+     * Vérifie si des mouvements sont possibles.
+     */
     public boolean canMove() {
     // Iterate through the entire grid
     for (int row = 0; row < size; row++) {
         for (int col = 0; col < size; col++) {
             Tile current = grid[row][col];
 
-            // Check if the current tile is empty
+            // Vérifier si la case est vide
             if (current.isEmpty()) {
                 return true;
             }
 
-            // Check if the current tile can merge with the tile above
+            // Vérifier si une fusion est possible avec une case voisine            
             if (row > 0 && current.getValue() == grid[row - 1][col].getValue()) { // Up
                 return true;
             }
 
-            // Check if the current tile can merge with the tile below
             if (row < size - 1 && current.getValue() == grid[row + 1][col].getValue()) { // Down
                 return true;
             }
 
-            // Check if the current tile can merge with the tile to the left
             if (col > 0 && current.getValue() == grid[row][col - 1].getValue()) { // Left
                 return true;
             }
 
-            // Check if the current tile can merge with the tile to the right
             if (col < size - 1 && current.getValue() == grid[row][col + 1].getValue()) { // Right
                 return true;
             }
         }
     }
 
-    // No valid moves left
+    // Aucun mouvement possible
     return false;
     }
 
 
-
+    /**
+     * Vérifie si une tuile a atteint la valeur gagnante.
+     */
     public boolean hasWon() {
-        // Check if a tile has reached the winning value
         for (Tile[] row : grid) {
             for (Tile tile : row) {
                 if (tile.getValue() == Constants.WIN_TILE) {

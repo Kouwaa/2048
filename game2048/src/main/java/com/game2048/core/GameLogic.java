@@ -37,23 +37,35 @@ public class GameLogic {
         gameFrame.repaint();
     }
 
+    /**
+     * Sauvegarde le score actuel du joueur dans la base de données.
+     */
     private void saveScore() {
-        int score = gameFrame.getScore();
-        dbManager.insertScore(username, score);
+        int score = gameFrame.getScore(); // Récupère le score actuel depuis l'interface graphique.
+        dbManager.insertScore(username, score); // Insère le score associé à l'utilisateur dans la base de données.
     }
 
+    /**
+     * Redémarre le jeu en réinitialisant la grille et le score.
+     */
     public void restartGame() {
-        this.grid = new Grid(grid.getSize());
-        gameFrame.resetScore();
-        gameFrame.updateGrid(this.grid);
-        gameFrame.repaint();
-        gameFrame.requestFocusInWindow();
+        this.grid = new Grid(grid.getSize()); // Crée une nouvelle grille avec la taille actuelle.
+        gameFrame.resetScore(); // Réinitialise le score affiché dans l'interface graphique.
+        gameFrame.updateGrid(this.grid); // Met à jour la grille affichée dans l'interface graphique.
+        gameFrame.repaint(); // Redessine l'interface graphique pour refléter les changements.
+        gameFrame.requestFocusInWindow(); // Redonne le focus à la fenêtre pour détecter les entrées clavier.
     }
 
+    /**
+     * Change la taille de la grille du jeu et réinitialise la partie.
+     *
+     * @param size La nouvelle taille de la grille (par exemple, 4x4, 5x5, etc.).
+     */
     public void changeGridSize(int size) {
-        this.grid = new Grid(size);
-        gameFrame.resetScore();
-        gameFrame.updateGrid(this.grid);
-        gameFrame.requestFocusInWindow();
+        this.grid = new Grid(size); // Crée une nouvelle grille avec la taille spécifiée.
+        gameFrame.resetScore(); // Réinitialise le score affiché dans l'interface graphique.
+        gameFrame.updateGrid(this.grid); // Met à jour la grille affichée dans l'interface graphique.
+        gameFrame.requestFocusInWindow(); // Redonne le focus à la fenêtre pour détecter les entrées clavier.
     }
+
 }

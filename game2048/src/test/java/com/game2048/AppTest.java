@@ -158,8 +158,126 @@ public class AppTest {
             }
         }
 
-        // Vérifier qu'il y a exactement 3 tuiles non vides
+        // Vérifier qu'il y a exactement 2 tuiles non vides
         assertEquals("Après un mouvement, la grille devrait avoir 2 tuiles non vides", 2, nonEmptyTiles);
+    }
+
+        /**
+     * Test: Vérification du mouvement vers la droite.
+     */
+    @Test
+    public void testMoveRight() {
+        Grid grid = new Grid(4);
+
+        // Initialiser une ligne avec des tuiles pour le test
+        grid.getGrid()[0][0].setValue(2);
+        grid.getGrid()[0][1].setValue(2);
+        grid.getGrid()[0][2].setValue(4);
+        grid.getGrid()[0][3].setValue(4);
+
+        grid.getGrid()[1][0].setValue(0);
+        grid.getGrid()[1][1].setValue(0);
+        grid.getGrid()[1][2].setValue(0);
+        grid.getGrid()[1][3].setValue(0);
+
+        grid.getGrid()[2][0].setValue(0);
+        grid.getGrid()[2][1].setValue(0);
+        grid.getGrid()[2][2].setValue(0);
+        grid.getGrid()[2][3].setValue(0);
+
+        grid.getGrid()[3][0].setValue(0);
+        grid.getGrid()[3][1].setValue(0);
+        grid.getGrid()[3][2].setValue(0);
+        grid.getGrid()[3][3].setValue(0);
+
+        // Effectuer un mouvement vers la droite
+        printGrid(grid);
+        int score = grid.move(Direction.RIGHT);
+        printGrid(grid);
+
+        // La fusion doit produire [0, 0, 4, 8] et un score de 12
+        assertEquals("Le score après un mouvement droite doit être 12", 12, score);
+        assertEquals("La troisième case de la ligne doit contenir 4", 4, grid.getGrid()[0][2].getValue());
+        assertEquals("La quatrième case de la ligne doit contenir 8", 8, grid.getGrid()[0][3].getValue());
+    }
+
+    /**
+     * Test: Vérification du mouvement vers le haut.
+     */
+    @Test
+    public void testMoveUp() {
+        Grid grid = new Grid(4);
+
+        // Initialiser une colonne avec des tuiles pour le test
+        grid.getGrid()[0][0].setValue(2);
+        grid.getGrid()[1][0].setValue(2);
+        grid.getGrid()[2][0].setValue(0);
+        grid.getGrid()[3][0].setValue(0);
+
+        grid.getGrid()[0][1].setValue(4);
+        grid.getGrid()[1][1].setValue(4);
+        grid.getGrid()[2][1].setValue(0);
+        grid.getGrid()[3][1].setValue(0);
+
+        grid.getGrid()[0][2].setValue(0);
+        grid.getGrid()[1][2].setValue(0);
+        grid.getGrid()[2][2].setValue(0);
+        grid.getGrid()[3][2].setValue(0);
+
+        grid.getGrid()[0][3].setValue(0);
+        grid.getGrid()[1][3].setValue(0);
+        grid.getGrid()[2][3].setValue(0);
+        grid.getGrid()[3][3].setValue(0);
+
+        // Effectuer un mouvement vers le haut
+        printGrid(grid);
+        int score = grid.move(Direction.UP);
+        printGrid(grid);
+
+        // La fusion doit produire [4, 8, 0, 0] dans la première colonne et un score de 12
+        assertEquals("Le score après un mouvement haut doit être 12", 12, score);
+        assertEquals("La première case de la colonne doit contenir 4", 4, grid.getGrid()[0][0].getValue());
+        assertEquals("La deuxième case de la colonne doit contenir 8", 8, grid.getGrid()[0][1].getValue());
+    }
+
+    /**
+     * Test: Vérification du mouvement vers le bas.
+     */
+    @Test
+    public void testMoveDown() {
+        Grid grid = new Grid(4);
+
+        // Initialiser une colonne avec des tuiles pour le test
+        grid.getGrid()[0][0].setValue(2);
+        grid.getGrid()[1][0].setValue(2);
+        grid.getGrid()[2][0].setValue(0);
+        grid.getGrid()[3][0].setValue(0);
+
+        grid.getGrid()[0][1].setValue(4);
+        grid.getGrid()[1][1].setValue(4);
+        grid.getGrid()[2][1].setValue(0);
+        grid.getGrid()[3][1].setValue(0);
+
+        grid.getGrid()[0][2].setValue(0);
+        grid.getGrid()[1][2].setValue(0);
+        grid.getGrid()[2][2].setValue(0);
+        grid.getGrid()[3][2].setValue(0);
+
+        grid.getGrid()[0][3].setValue(0);
+        grid.getGrid()[1][3].setValue(0);
+        grid.getGrid()[2][3].setValue(0);
+        grid.getGrid()[3][3].setValue(0);
+
+        // Effectuer un mouvement vers le bas
+        printGrid(grid);
+        int score = grid.move(Direction.DOWN);
+        printGrid(grid);
+
+        // La fusion doit produire [0, 0, 4, 8] dans la première colonne et un score de 12
+        assertEquals("Le score après un mouvement bas doit être 12", 12, score);
+
+        assertEquals("La troisième case de la colonne doit contenir 4", 4, grid.getGrid()[3][0].getValue());
+        assertEquals("La quatrième case de la colonne doit contenir 8", 8, grid.getGrid()[3][1].getValue());
     }
 
 
@@ -210,14 +328,14 @@ public class AppTest {
     }
 
     private void printGrid(Grid grid) {
-    for (int row = 0; row < grid.getSize(); row++) {
-        for (int col = 0; col < grid.getSize(); col++) {
-            System.out.print(grid.getGrid()[row][col].getValue() + "\t");
+        for (int row = 0; row < grid.getSize(); row++) {
+            for (int col = 0; col < grid.getSize(); col++) {
+                System.out.print(grid.getGrid()[row][col].getValue() + "\t");
+            }
+            System.out.println();
         }
         System.out.println();
     }
-    System.out.println();
-}
 
 
 
@@ -280,15 +398,15 @@ public class AppTest {
     }
 
     private int countNonEmptyTiles(Grid grid) {
-    int count = 0;
-    for (int row = 0; row < grid.getSize(); row++) {
-        for (int col = 0; col < grid.getSize(); col++) {
-            if (!grid.getGrid()[row][col].isEmpty()) {
-                count++;
+        int count = 0;
+        for (int row = 0; row < grid.getSize(); row++) {
+            for (int col = 0; col < grid.getSize(); col++) {
+                if (!grid.getGrid()[row][col].isEmpty()) {
+                    count++;
+                }
             }
         }
+        return count;
     }
-    return count;
-}
 
 }

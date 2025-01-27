@@ -159,24 +159,24 @@ public class GameFrame extends JFrame {
         }
 
         JFrame scoresFrame = new JFrame("Top 10 Meilleurs Scores");
-        scoresFrame.setSize(300, 400);
+        scoresFrame.setSize(400, 500); // Dimensions augmentées
         scoresFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         scoresFrame.setLayout(new BorderLayout());
         scoresFrame.setLocationRelativeTo(null);
 
         JLabel titleLabel = new JLabel("Top 10 Meilleurs Scores", JLabel.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Police plus grande
         titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JList<String> scoresList = new JList<>(topScores.toArray(new String[0]));
-        scoresList.setFont(new Font("Arial", Font.PLAIN, 16));
+        scoresList.setFont(new Font("Arial", Font.PLAIN, 18)); // Police plus grande
         scoresList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scoresList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JScrollPane scrollPane = new JScrollPane(scoresList);
 
         JButton closeButton = new JButton("Fermer");
-        closeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        closeButton.setFont(new Font("Arial", Font.BOLD, 16)); // Police plus grande
         closeButton.addActionListener(e -> {
             scoresFrame.dispose(); // Fermer la fenêtre des scores
             requestFocusInWindow(); // Redonner le focus à la fenêtre principale
@@ -192,7 +192,6 @@ public class GameFrame extends JFrame {
 
         scoresFrame.setVisible(true);
     }
-
 
     public void updateScore(int points) {
         score += points;
@@ -219,12 +218,12 @@ public class GameFrame extends JFrame {
     }
 
     private void resizeWindow(int gridSize) {
-        int tileSize = 100;
-        int gap = 10;
-        int margin = 50;
+        int tileSize = 150; // Augmentation de la taille des tiles
+        int gap = 15; // Espacement entre les tiles
+        int margin = -20; // Marges autour du plateau de jeu
 
-        int windowWidth = gridSize * (tileSize + gap) + margin + 35;
-        int windowHeight = gridSize * (tileSize + gap) + margin + 35;
+        int windowWidth = gridSize * (tileSize + gap) + margin + 100; // Ajustement largeur
+        int windowHeight = gridSize * (tileSize + gap) + margin + 100; // Ajustement hauteur
 
         setSize(windowWidth, windowHeight);
         setLocationRelativeTo(null);

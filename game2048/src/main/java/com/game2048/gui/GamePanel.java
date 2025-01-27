@@ -19,9 +19,11 @@ public class GamePanel extends JPanel {
 
     public GamePanel(Grid grid) {
         this.grid = grid;
+
+        // Mise à jour des dimensions pour les nouvelles tailles des tiles
         setPreferredSize(new Dimension(
             grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP,
-            grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP 
+            grid.getSize() * Constants.TILE_SIZE + (grid.getSize() - 1) * Constants.TILE_GAP
         ));
         setBackground(Colors.BACKGROUND);
     }
@@ -38,28 +40,28 @@ public class GamePanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        int tileSize = Constants.TILE_SIZE;
-        int tileGap = Constants.TILE_GAP;
+        int tileSize = Constants.TILE_SIZE; // Taille des tiles définie dans Constants
+        int tileGap = Constants.TILE_GAP; // Espace entre les tiles
 
-        // Clear the background
+        // Efface le fond
         g2d.setColor(Colors.BACKGROUND);
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
-        // Draw tiles
+        // Dessine les tiles
         for (int row = 0; row < grid.getSize(); row++) {
             for (int col = 0; col < grid.getSize(); col++) {
                 Tile tile = grid.getGrid()[row][col];
                 int x = col * (tileSize + tileGap);
                 int y = row * (tileSize + tileGap);
 
-                // Draw tile background
+                // Dessiner l'arrière-plan des tiles
                 g2d.setColor(tile.isEmpty() ? Colors.VOID : getTileColor(tile.getValue()));
                 g2d.fillRoundRect(x, y, tileSize, tileSize, 15, 15);
 
-                // Draw tile value
+                // Dessiner la valeur des tiles
                 if (!tile.isEmpty()) {
                     g2d.setColor(tile.getValue() == 2 || tile.getValue() == 4 ? Colors.DARK : Colors.LIGHT);
-                    g2d.setFont(new Font("Arial", Font.BOLD, tileSize / 3));
+                    g2d.setFont(new Font("Arial", Font.BOLD, tileSize / 3)); // Taille de police ajustée à la taille des tiles
                     String value = String.valueOf(tile.getValue());
                     FontMetrics fm = g2d.getFontMetrics();
                     int textWidth = fm.stringWidth(value);
